@@ -30,9 +30,9 @@ class TodoListViewController: UITableViewController {
         newItem3.title = "Find more stuff"
         itemArray.append(newItem3)
         
-        //        if let item = defaults.stringArray(forKey: "ToDoListArray") as? [String] {
-        //            itemArray = item
-        //        }
+        if let item = defaults.stringArray(forKey: "ToDoListArray") as? [Item] {
+            itemArray = item
+        }
     }
     
     //MARK - TableView datasource methods
@@ -41,7 +41,7 @@ class TodoListViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
         
         let item = itemArray[indexPath.row]
-      
+        
         cell.textLabel?.text = item.title
         cell.accessoryType = item.done ? .checkmark : .none
         return cell
