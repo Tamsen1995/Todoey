@@ -12,13 +12,11 @@ import CoreData
 class TodoListViewController: UITableViewController {
     
     var itemArray = [Item]()
-    
-    
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         loadItems()
     }
     
@@ -44,9 +42,11 @@ class TodoListViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         
+        // This might potentially add a deletion functionality, I'm not sure if
+        // I want to do this or simply have a checkmark next to the todo
         //        context.delete(itemArray[indexPath.row])
         //        itemArray.remove(at: indexPath.row)
-        
+
         saveItems()
         self.tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -55,31 +55,22 @@ class TodoListViewController: UITableViewController {
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         let alert = UIAlertController(title: "New Todoey", message: "", preferredStyle: .alert)
         var textField = UITextField()
-        
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             // what happens once the user clicks the add item button.
             print("Success !")
-            
-            
             let newItem = Item(context: self.context)
             
             newItem.title = textField.text!
             newItem.done = false
             self.itemArray.append(newItem)
-            
             self.saveItems()
-            
         }
-        
         alert.addTextField { (alertTextField) in
             alertTextField.placeholder = "Create new item"
             textField = alertTextField
         }
-        
         alert.addAction(action)
-        
         present(alert, animated: true, completion: nil)
-        
     }
     
     func saveItems() {
@@ -118,7 +109,7 @@ extension TodoListViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text?.count == 0 {
             loadItems()
-
+            
             // putting this on the main thread in order to
             // dismiss the search bar even if other processes are going on
             DispatchQueue.main.async {
