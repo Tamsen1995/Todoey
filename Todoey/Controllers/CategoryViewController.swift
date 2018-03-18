@@ -9,19 +9,18 @@
 import UIKit
 import RealmSwift
 
-class CategoryViewController: UITableViewController {
-    
+class CategoryViewController: SwipeTableViewController {
     
     let realm = try! Realm()
     
-    
     var categories: Results<Category>?
-  
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print("LOading")
         loadCategories()
+        
+        tableView.rowHeight = 80.0
     }
     
     //MARK: - TableView Delegate methods
@@ -40,19 +39,21 @@ class CategoryViewController: UITableViewController {
     
     //MARK: - TableView Datasource methods
     
-  
+    
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return categories?.count ?? 1
     }
     
+    
+    
+ 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
-       // let category = categories[indexPath.row]
-        
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath) as! SwipeTableViewCell
         cell.textLabel?.text = categories?[indexPath.row].name ?? "No Categories added yet."
+//        cell.delegate = self
+        
         return cell
         
     }
@@ -70,7 +71,7 @@ class CategoryViewController: UITableViewController {
             print("Success ! Category added")
             let newCategory = Category()
             newCategory.name = textField.text!
-
+            
             self.save(category: newCategory)
         }
         alert.addTextField { (alertTextField) in
@@ -99,6 +100,9 @@ class CategoryViewController: UITableViewController {
         tableView.reloadData()
     }
     
-    
-    
 }
+
+
+
+
+
