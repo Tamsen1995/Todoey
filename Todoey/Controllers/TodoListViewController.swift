@@ -8,8 +8,9 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
-class TodoListViewController: UITableViewController {
+class TodoListViewController: SwipeTableViewController {
     
     var todoItems: Results<Item>?
     let realm = try! Realm()
@@ -23,16 +24,24 @@ class TodoListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableView.separatorStyle = .none
         //loadItems()
     }
     
     //MARK - TableView datasource methods
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         if let item = todoItems?[indexPath.row] {
             cell.textLabel?.text = item.title
+            
+            if let color = FlatSkyBlue().darken(byPercentage: CGFloat(indexPath.row) / CGFloat(todoItems!.count)) {
+                cell.backgroundColor = color
+            }
+            
+            //cell.backgroundColor = flatSkyBlue().darken(byPercentage: )
+            
             cell.accessoryType = item.done ? .checkmark : .none
         } else {
             cell.textLabel?.text = "No Items Added"
@@ -54,7 +63,7 @@ class TodoListViewController: UITableViewController {
                 try realm.write {
                     item.done = !item.done
                     
-                    realm.delete(item)
+                    //    realm.delete(item)
                     
                 }
             } catch {
@@ -80,7 +89,7 @@ class TodoListViewController: UITableViewController {
                         newItem.title = textField.text!
                         newItem.dateCreated = Date()
                         
-                        print(newItem.dateCreated) // TESTING
+                        //  print(newItem.dateCreated) // TESTING
                         // TODO :  A date created property needs to be set here
                         currentCategory.items.append(newItem)
                     }
@@ -106,6 +115,21 @@ class TodoListViewController: UITableViewController {
         // print(selectedCategory?.items)
         tableView.reloadData()
     }
+    
+    // MARK : - Delete todo item with swipe gesture
+    
+    override func updateModel(at indexPath: IndexPath) {
+        if let item = self.todoItems?[indexPath.row] {
+            do {
+                try self.realm.write {
+                    self.realm.delete(item)
+                }
+            } catch {
+                print("Error deleting todo item")
+            }
+        }
+    }
+    
 }
 
 //MARK: - searchbar methods

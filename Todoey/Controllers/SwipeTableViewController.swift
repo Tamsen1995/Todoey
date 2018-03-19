@@ -11,10 +11,13 @@ import SwipeCellKit
 
 class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegate {
     
+    
+    var cell: UITableViewCell?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
+
+        tableView.rowHeight = 80.0
     }
     
     // TableView Datasource methods
@@ -22,10 +25,8 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath) as! SwipeTableViewCell
-        cell.textLabel?.text = categories?[indexPath.row].name ?? "No Categories added yet."
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! SwipeTableViewCell
         cell.delegate = self
-        
         return cell
     }
     
@@ -35,17 +36,7 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
         let deleteAction = SwipeAction(style: .destructive, title: "Delete") {
             action, indexPath in
             
-            
-            //            if let category = self.categories?[indexPath.row] {
-            //                do {
-            //                    try self.realm.write {
-            //                        self.realm.delete(category)
-            //                    }
-            //                } catch {
-            //                    print ("Error deleting category")
-            //                }
-            //            }
-            
+            self.updateModel(at: indexPath)
             print("Delete Cell")
             
         }
@@ -58,6 +49,11 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
         var options = SwipeTableOptions()
         options.expansionStyle = .destructive
         return options
+    }
+    
+    
+    func updateModel(at indexPath: IndexPath) {
+        // Here I will update my data model
     }
     
 }
