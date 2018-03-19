@@ -25,7 +25,15 @@ class TodoListViewController: SwipeTableViewController {
         super.viewDidLoad()
         
         tableView.separatorStyle = .none
-        //loadItems()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        if let colorHex = selectedCategory?.hex {
+            guard let navBar = navigationController?.navigationBar else {
+                fatalError("Navigation controller does not exist.")
+            }
+            navBar.barTintColor = UIColor(hexString: colorHex)
+        }
     }
     
     //MARK - TableView datasource methods
@@ -38,14 +46,14 @@ class TodoListViewController: SwipeTableViewController {
             
             
             let persistedColor =  UIColor(hexString: selectedCategory!.hex) // UIColor(hexString: categories?[indexPath.row].hex ?? "359E56")
-                
+            
             
             
             if let color = persistedColor?.darken(byPercentage: CGFloat(indexPath.row) / CGFloat(todoItems!.count)) {
                 cell.backgroundColor = color
                 
                 cell.textLabel?.textColor = ContrastColorOf(color, returnFlat: true)
-
+                
             }
             
             //cell.backgroundColor = flatSkyBlue().darken(byPercentage: )
